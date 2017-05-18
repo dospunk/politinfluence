@@ -1,0 +1,36 @@
+/* Begin Grid System */
+.grid {
+  /*max-width: 1200px;*/ }
+  .grid * {
+    box-sizing: border-box; }
+
+.row:before,
+.row:after {
+  content: "";
+  display: table;
+  clear: both; }
+
+[class*='col-'] {
+  float: left;
+  min-height: 1px;
+  width: 50%; }
+
+[class*='mar-col-'] {
+  width: 49%;
+  margin: .5%; }
+
+.col-1 {
+  width: 50%; }
+
+.col-2 {
+  width: 100%; }
+
+.mar-col-1 {
+  width: 49%; }
+
+.mar-col-2 {
+  width: 99%; }
+
+/* End Grid System */
+
+/*# sourceMappingURL=style.css.map */

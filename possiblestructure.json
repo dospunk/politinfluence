@@ -1,0 +1,16 @@
+{
+	joe smith: {
+		donations: {
+			companyName: {
+				amount: 999,
+				date: today,
+			}
+		},
+		votes: {
+			billName: {
+				vote: yes,
+				desc: a bill to do a thing
+			}
+		}
+	}
+}
