@@ -31,7 +31,7 @@ app.get("/search", function(req, res){
 		},
 		function(list, callback){
 			//console.log("Fourth waterfall reached");//dev
-			var rawSearchStr = fs.readFileSync('search.ejs', 'utf-8');
+			var rawSearchStr = fs.readFileSync('ejs/search.ejs', 'utf-8');
 			
 			var searchStr = ejs.render(rawSearchStr, {list: list});
 			res.send(searchStr);
@@ -58,7 +58,7 @@ app.get("/info", function(req, res){
 			callback(null, data);
 		},
 		function(data, callback){
-			var rawInfoStr = fs.readFileSync('info.ejs', 'utf-8');
+			var rawInfoStr = fs.readFileSync('ejs/info.ejs', 'utf-8');
 			var infoStr = ejs.render(rawInfoStr, {personObj: data[0], donationArr: data[1], voteArr: data[2]});
 			
 			res.send(infoStr);
