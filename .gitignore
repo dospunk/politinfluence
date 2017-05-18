@@ -39,5 +39,9 @@ jspm_packages
 #MongoDB data
 data
 
+#Sass/SCSS
+.sass-cache
+
 #Misc
 nocommit
+add_data
