@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<head>
+	<title>Add or Update Person</title>
+</head>
+<body>
+	<h1>Add</h1>
+	<form action="/add" method="get">
+		Name: <input name="name" />
+		<br><br>
+		Party: <input name="party" />
+		<br><br>
+		Link: <input name="link" />
+		<br><br>
+		State: <input name="state" />
+		<br><br>
+		District: <input name="district" />
+		<br><br>
+		Position: <input name="position" />
+		<br><br>
+		Donations: <textarea name="donations"></textarea>
+		<br><br>
+		<input name="type" value="person" style="display: none;" />
+		<button>Submit</button>
+	</form>
+	<h1>Update</h1>
+	<form action="/update" method="get">
+		_id: <input name="id" />
+		<br><br>
+		Name: <input name="name" />
+		<br><br>
+		Party: <input name="party" />
+		<br><br>
+		Link: <input name="link" />
+		<br><br>
+		State: <input name="state" />
+		<br><br>
+		District: <input name="district" />
+		<br><br>
+		Position: <input name="position" />
+		<br><br>
+		Donations: <textarea name="donations"></textarea>
+		<br><br>
+		<input name="type" value="person" style="display: none;" />
+		<button>Submit</button>
+	</form>
+</body>

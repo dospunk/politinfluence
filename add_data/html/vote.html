@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<head>
+	<title>Add or Update Vote</title>
+</head>
+<body>
+	<h1>Add</h1>
+	<form action="/add" method="get">
+		Bill: <input name="bill" />
+		<br><br>
+		Party: <input name="party" />
+		<br><br>
+		Issue: <input name="issue" />
+		<br><br>
+		YN: <input name="yn" />
+		<br><br>
+		By: <input name="by" />
+		<br><br>
+		Desc: <textarea name="desc"></textarea>
+		<br><br>
+		<input name="type" value="vote" style="display: none;" />
+		<button>Submit</button>
+	</form>
+	<h1>Update</h1>
+	<form action="/update" method="get">
+		_id: <input name="id" />
+		<br><br>
+		Bill: <input name="bill" />
+		<br><br>
+		Party: <input name="party" />
+		<br><br>
+		Issue: <input name="issue" />
+		<br><br>
+		YN: <input name="yn" />
+		<br><br>
+		By: <input name="by" />
+		<br><br>
+		Desc: <textarea name="desc"></textarea>
+		<br><br>
+		<input name="type" value="vote" style="display: none;" />
+		<button>Submit</button>
+	</form>
+	</form>
+</body>

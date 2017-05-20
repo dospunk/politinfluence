@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<head>
+	<title>Add or Update Donation</title>
+</head>
+<body>
+	<h1>Add</h1>
+	<form action="/add" method="get">
+		Amount: <input name="amount" />
+		<br><br>
+		Date: <input name="date" />
+		<br><br>
+		To: <input name="to" />
+		<br><br>
+		From: <input name="from" />
+		<br><br>
+		<input name="type" value="donation" style="display: none;" />
+		<button>Submit</button>
+	</form>
+	<h1>Update</h1>
+	<form action="/update" method="get">
+		_id: <input name="id" />
+		<br><br>
+		Amount: <input name="amount" />
+		<br><br>
+		Date: <input name="date" />
+		<br><br>
+		To: <input name="to" />
+		<br><br>
+		From: <input name="from" />
+		<br><br>
+		<input name="type" value="donation" style="display: none;" />
+		<button>Submit</button>
+	</form>
+</body>

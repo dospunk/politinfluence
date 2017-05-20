@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<head>
+	<title>Add or Update Entity</title>
+</head>
+<body>
+	<h1>Add</h1>
+	<form action="/add" method="get">
+		Name: <input name="name" />
+		<br><br>
+		Link: <input name="link" />
+		<br><br>
+		Relevant Issues: <textarea name="issues"></textarea>
+		<br><br>
+		<input name="type" value="entity" style="display: none;" />
+		<button>Submit</button>
+	</form>
+	<h1>Update</h1>
+	<form action="/update" method="get">
+		_id: <input name="id" />
+		<br><br>
+		Name: <input name="name" />
+		<br><br>
+		Link: <input name="link" />
+		<br><br>
+		Relevant Issues: <textarea name="issues"></textarea>
+		<br><br>
+		<input name="type" value="entity" style="display: none;" />
+		<button>Submit</button>
+	</form>
+</body>
