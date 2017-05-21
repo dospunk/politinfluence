@@ -18,7 +18,7 @@ app.get("/", function(req, res){
 	//console.log("Home loaded.\n");//dev
 });
 
-app.get("/search", function(req, res){
+app.get("/people", function(req, res){
 	//console.log("Search loading...");//dev
 	async.waterfall([
 		function(callback){
@@ -27,6 +27,37 @@ app.get("/search", function(req, res){
 			callback(null, req.query.name, req.query.state);
 		},
 		lookup.searchPeople,
+		function(promise, callback){
+			//console.log("Third waterfall reached");//dev
+			promise.then(function(val){
+				//console.log(val);//dev
+				callback(null, val);
+			});
+		},
+		function(list, callback){
+			//console.log("Fourth waterfall reached");//dev
+			ejs.renderFile('ejs/search.ejs', {list: list}, function(err, str){
+				if(err) console.log(err);
+				
+				res.send(str);
+			});
+			//console.log("Search loaded.\n");//dev
+		}
+	], function(err){
+		if(err) console.log(err);
+	});
+});
+
+app.get("/entities", function(req, res){
+	//console.log("Search loading...");//dev
+	async.waterfall([
+		function(callback){
+			//first function must have only one argument
+			//console.log("First waterfall reached");//dev
+			console.log(req.query.name);
+			callback(null, req.query.name);
+		},
+		lookup.searchEntity,
 		function(promise, callback){
 			//console.log("Third waterfall reached");//dev
 			promise.then(function(val){

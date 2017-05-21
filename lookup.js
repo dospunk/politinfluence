@@ -45,12 +45,25 @@ var displayPerson = function(id, callback){
 		
 		var array = [person, voteArr];
 		
-		db.close()
+		db.close();
 		callback(null, array);
+	});
+}
+
+var searchEntity = function(name, callback){
+	mongo.connect("mongodb://127.0.0.1:27017/local", function(err, db){
+		if(err) console.log(err);
+		
+		var entities = db.collection('entities');
+		var arry = entities.find({name: name}).toArray();
+		
+		db.close();
+		callback(null, arry);
 	});
 }
 
 module.exports = {
 	searchPeople: searchPeople,
 	displayPerson: displayPerson,
+	searchEntity: searchEntity,
 };

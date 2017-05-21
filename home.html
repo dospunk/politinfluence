@@ -4,7 +4,8 @@
 </head>
 <body>
 	<h1>Politinfluence</h1>
-	<form action="/search" method="get">
+	<h3>Search for a person</h3>
+	<form action="/people" method="get">
 		Name: <input name="name" />
 		<br><br>
 		State: <select name="state">
@@ -60,6 +61,12 @@
 			<option value="WY">WY</option>
 		</select>
 		<br><br>
-		<button id="searchState">Search</button>
+		<button>Search</button>
+	</form>
+	<h3>Search for an entity</h3>
+	<form action="/entities" method="get">
+		Name: <input name="name" />
+		<br><br>
+		<button>Search</button>
 	</form>
 </body>
