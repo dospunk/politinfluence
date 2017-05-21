@@ -67,11 +67,11 @@ app.get('/update', function(req, res){
 app.get('/add', function(req, res){
 	var q = req.query;
 	if(req.query.type === "person"){
-		res.send('db.people.insert({ name: "' + q.name + '", party: "' + q.party + '", link: "' + q.link + '", state: "' + q.state + '", district: ' + q.district + ', position: "' + q.position + '", donations: ' + q.donations + ' })');
+		addPersonFunc(q, res);
 	} else if(req.query.type === "entity"){
-		res.send('db.entities.insert({ name: "' + q.name + '", issues: ' + q.issues + ', link: "' + q.link + '"})');
+		addEntityFunc(q, res);
 	} else if(req.query.type === "donation"){
-		donationFunc(q.amount, q.date, q.to, q.from, res);
+		addDonationFunc(q.amount, q.date, q.to, q.from, res);
 	} else if(req.query.type === "vote"){
 		res.send("Not Implemented Yet");
 	} else {
@@ -85,11 +85,11 @@ server.listen(3005, function(){
 });
 
 
-function donationFunc(amount, date, to, frm, res){
+function addDonationFunc(amount, date, to, frm, res){
 	var result = "";
 	amount = parseFloat(amount);
 	mongo.connect("mongodb://127.0.0.1:27017/local", function(err, db){
-		if(err) throw err;
+		if(err) console.log(err);
 		
 		var donations = db.collection('donations');
 		var donation = {
@@ -141,6 +141,42 @@ function donationFunc(amount, date, to, frm, res){
 				db.close();
 				res.send(result);
 			});
+		});
+	});
+}
+
+function addPersonFunc(q, res){
+	var person = {
+		name: q.name,
+		party: q.party,
+		link: q.link,
+		state: q.state,
+		district: parseInt(q.district),
+		position: q.position,
+		donations: q.donations
+	};
+	mongo.connect("mongodb://127.0.0.1:27017/local", function(err, db){
+		var people = db.collection("people");
+		people.insertOne(person, function(err, result){
+			if(err) console.log(err);
+			
+			res.send(result + "<br><br><a href=\"/person\">back</a>");
+		});
+	});
+}
+
+function addEntityFunc(q, res){
+	var entity = {
+		name: q.name,
+		issues: JSON.parse(q.issues),
+		link: q.link
+	};
+	mongo.connect("mongodb://127.0.0.1:27017/local", function(err, db){
+		var entities = db.collection("entities");
+		entities.insertOne(entity, function(err, result){
+			if(err) console.log(err);
+			
+			res.send(result + "<br><br><a href=\"/entity\">back</a>");
 		});
 	});
 }
