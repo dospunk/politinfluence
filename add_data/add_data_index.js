@@ -160,6 +160,7 @@ function addPersonFunc(q, res){
 		people.insertOne(person, function(err, result){
 			if(err) console.log(err);
 			
+			db.close();
 			res.send(result + "<br><br><a href=\"/person\">back</a>");
 		});
 	});
@@ -176,6 +177,7 @@ function addEntityFunc(q, res){
 		entities.insertOne(entity, function(err, result){
 			if(err) console.log(err);
 			
+			db.close();
 			res.send(result + "<br><br><a href=\"/entity\">back</a>");
 		});
 	});
