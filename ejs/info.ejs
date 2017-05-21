@@ -4,8 +4,58 @@
 	 <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-	<h1 style="display: inline-block;"><%= personObj.name %></h1><h3><%= personObj.party %>
+	<h1><%= personObj.name %></h1><h3><%= personObj.party %></h3>
 	<p><%= personObj.state %>, district <%= personObj.district %></p>
 	<p>Position: <%= personObj.position %></p>
 	<p><a href="<%= personObj.link %>">Website</a></p>
+	<p> Total donations: $<%= personObj.donations.total %></p>
+	
+	<div class="grid">
+		<div class="row">
+			<div class="col-1">
+				<div class="row">
+					<div class="col-1">
+						<h4>Bill</h4>
+					</div>
+					<div class="col-1">
+						<h4>Vote</h4>
+					</div>
+				</div>
+			</div>
+			<div class="col-1">
+				<h4>Donations</h4>
+			</div>
+		</div>
+		<%
+			for(var i = ((pageNum-1)*10); (i < voteArr.length && i < pageNum*10); i++){
+			var vote = voteArr[i];
+		%>
+			<div class="row">
+				<div class="col-1">
+					<div class="row">
+						<div class="col-1">
+							<h3><%= vote.bill %></h3>
+							<p><%= vote.desc %></p>
+						</div>
+						<div class="col-1">
+							<h1><%= vote.yn.toUpperCase() %></h1>
+						</div>
+					</div>
+				</div>
+				<div class="col-1">
+					<% vote.issues.forEach(function(issue){ %>
+						<h4><%= issue %></h4>
+						<p>Pro: $<%= personObj.donations[issue].pro ? personObj.donations[issue].pro : 0 %></p>
+						<p>Anti: $<%= personObj.donations[issue].anti ? personObj.donations[issue].anti : 0 %></p>
+					<% }); %>
+				</div>
+			</div>
+		<% } %>
+	</div>
+	<center>
+		<% if(pageNum !== 1) { %>
+			<a href="/info?id=<%= personObj._id %>&pageNum=<%= pageNum-1 %>">back</a>
+		<% } %>
+		<a href="/info?id=<%= personObj._id %>&pageNum=<%= pageNum+1 %>">next</a>
+	</center>
 </body>

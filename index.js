@@ -10,11 +10,16 @@ const app = express();
 const server = http.createServer(app);
 
 //express
+app.use(express.static(__dirname));
+
 app.get("/", function(req, res){
+	//console.log("Loading home...");//dev
 	res.sendFile('./home.html', {root: __dirname});
+	//console.log("Home loaded.\n");//dev
 });
 
 app.get("/search", function(req, res){
+	//console.log("Search loading...");//dev
 	async.waterfall([
 		function(callback){
 			//first function must have only one argument
@@ -35,6 +40,7 @@ app.get("/search", function(req, res){
 			
 			var searchStr = ejs.render(rawSearchStr, {list: list});
 			res.send(searchStr);
+			//console.log("Search loaded.\n");//dev
 		}
 	], function(err){
 		if(err) console.log(err);
@@ -42,6 +48,7 @@ app.get("/search", function(req, res){
 });
 
 app.get("/info", function(req, res){
+	//console.log("Loading info...");//dev
 	async.waterfall([
 		function(callback){
 			callback(null, req.query.id);
@@ -49,19 +56,23 @@ app.get("/info", function(req, res){
 		lookup.displayPerson,
 		function(promises, callback){
 			Promise.all(promises).then(function(val){
-				console.log(val);//dev
+				val[1].sort(function(a, b){
+					return new Date(b.date) - new Date(a.date);
+				});
+				//console.log(val);//dev
 				callback(null, val);
 			});
 		},
 		function(data, callback){
-			//this will eventually be a function to consolidate donation info
-			callback(null, data);
-		},
-		function(data, callback){
+			//console.log("Reading file...");//dev
 			var rawInfoStr = fs.readFileSync('ejs/info.ejs', 'utf-8');
-			var infoStr = ejs.render(rawInfoStr, {personObj: data[0], donationArr: data[1], voteArr: data[2]});
+			//console.log("File read.\n");//dev
+			//console.log("Rendering file...");//dev
+			var infoStr = ejs.render(rawInfoStr, {personObj: data[0], voteArr: data[1], pageNum: parseInt(req.query.pageNum)});
+			//console.log("File rendered.\n");//dev
 			
 			res.send(infoStr);
+			//console.log("Info loaded.\n");//dev
 		}
 	], function(err){
 		if(err) console.log(err);

@@ -3,13 +3,17 @@
 	<title>Politinfluence</title>
 </head>
 <body>
-	<ul>
-		<% list.forEach(function(doc){%>
-			<li> <a href="/info?id=<%= doc._id %>"><%= doc.name %></a>
-				<ul>
-					<li> <%= doc.state %>, district <%= doc.district %> </li>
-				</ul>
-			</li>
-		<% }); %>
-	</ul>
+	<%if(list.length > 0){ %>
+		<ul>
+			<% list.forEach(function(doc){%>
+				<li> <a href="/info?id=<%= doc._id %>&pageNum=1"><%= doc.name %></a>
+					<ul>
+						<li> <%= doc.state %>, district <%= doc.district %> </li>
+					</ul>
+				</li>
+			<% }); %>
+		</ul>
+	<% } if(list.length === 0 { %>
+		<h3>No Results Found.</h3>
+	<% } %>
 </body>
