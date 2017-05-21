@@ -36,10 +36,11 @@ app.get("/search", function(req, res){
 		},
 		function(list, callback){
 			//console.log("Fourth waterfall reached");//dev
-			var rawSearchStr = fs.readFileSync('ejs/search.ejs', 'utf-8');
-			
-			var searchStr = ejs.render(rawSearchStr, {list: list});
-			res.send(searchStr);
+			ejs.renderFile('ejs/search.ejs', {list: list}, function(err, str){
+				if(err) console.log(err);
+				
+				res.send(str);
+			});
 			//console.log("Search loaded.\n");//dev
 		}
 	], function(err){
@@ -64,15 +65,11 @@ app.get("/info", function(req, res){
 			});
 		},
 		function(data, callback){
-			//console.log("Reading file...");//dev
-			var rawInfoStr = fs.readFileSync('ejs/info.ejs', 'utf-8');
-			//console.log("File read.\n");//dev
-			//console.log("Rendering file...");//dev
-			var infoStr = ejs.render(rawInfoStr, {personObj: data[0], voteArr: data[1], pageNum: parseInt(req.query.pageNum)});
-			//console.log("File rendered.\n");//dev
-			
-			res.send(infoStr);
-			//console.log("Info loaded.\n");//dev
+			var infoStr = ejs.renderFile('ejs/info.ejs', {personObj: data[0], voteArr: data[1], pageNum: parseInt(req.query.pageNum)}, function(err, str){
+				if(err) console.log(err);
+				res.send(str);
+				//console.log("Info loaded.\n");//dev
+			});
 		}
 	], function(err){
 		if(err) console.log(err);

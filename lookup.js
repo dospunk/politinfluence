@@ -4,7 +4,7 @@ const ObjectID = require('mongodb').ObjectID;
 var searchPeople = function(name, state, callback){
 	//console.log("Second waterfall reached");//dev
 	mongo.connect("mongodb://127.0.0.1:27017/local", function(err, db){
-		if(err) throw err;
+		if(err) console.log(err);
 		
 		var people = db.collection('people');
 		
@@ -32,7 +32,7 @@ var searchPeople = function(name, state, callback){
 
 var displayPerson = function(id, callback){
 	mongo.connect("mongodb://127.0.0.1:27017/local", function(err, db){
-		if(err) throw err;
+		if(err) console.log(err);
 		
 		var people = db.collection('people');
 		var votes = db.collection('votes');
