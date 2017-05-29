@@ -50,6 +50,9 @@ app.get('/update', function(req, res){
 		if(req.query.position !== ""){
 			send += ' position: "' + req.query.position + '",';
 		}
+		if(req.query.donations !== ""){
+			send += ' donations: ' + req.query.donations;
+		}
 		
 	} else if(req.query.type === "entity"){
 		res.send("Not implemented yet");
@@ -71,7 +74,7 @@ app.get('/add', function(req, res){
 	} else if(req.query.type === "entity"){
 		addEntityFunc(q, res);
 	} else if(req.query.type === "donation"){
-		addDonationFunc(q.amount, q.date, q.to, q.from, res);
+		addDonationFunc(q, res);
 	} else if(req.query.type === "vote"){
 		res.send("Not Implemented Yet");
 	} else {
@@ -85,18 +88,19 @@ server.listen(3005, function(){
 });
 
 
-function addDonationFunc(amount, date, to, frm, res){
+function addDonationFunc(q, res){
 	var result = "";
-	amount = parseFloat(amount);
+	q.amount = parseFloat(q.amount);
 	mongo.connect("mongodb://127.0.0.1:27017/local", function(err, db){
 		if(err) console.log(err);
 		
 		var donations = db.collection('donations');
 		var donation = {
-			amount: amount,
-			date: date,
-			to: new ObjectID(to),
-			'from': new ObjectID(frm)
+			amount: q.amount,
+			date: q.date,
+			to: new ObjectID(q.to),
+			'from': new ObjectID(q["from"]),
+			pac: q.pac
 		};
 		donations.insert(donation, function(err, data){
 			if(err){
@@ -107,11 +111,11 @@ function addDonationFunc(amount, date, to, frm, res){
 		});
 		
 		var entities = db.collection('entities');
-		entities.findOne({_id: new ObjectID(frm)}).then(function(val){
-			console.log(val);
+		entities.findOne({_id: new ObjectID(q['from'])}).then(function(val){
+			console.log(val);//dev
 			
 			var addTo = { $inc: {
-				'donations.total': amount
+				'donations.total': q.amount
 			} };
 			for(var key in val.issues){
 				if (!val.issues.hasOwnProperty(key)) continue;
@@ -119,20 +123,20 @@ function addDonationFunc(amount, date, to, frm, res){
 				//console.log(key + ": " + val.issues[key]);//dev
 				
 				if(val.issues[key] === 'pro' || val.issues[key] ==='ppro'){
-					addTo['$inc']["donations." + key + '.pro'] = amount;
+					addTo['$inc']["donations." + key + '.pro'] = q.amount;
 				} else if(val.issues[key] === 'anti' || val.issues[key] ==='panti'){
-					addTo['$inc']["donations." + key + '.anti'] = amount;
+					addTo['$inc']["donations." + key + '.anti'] = q.amount;
 				} else if(val.issues[key] === "unknown"){
-					addTo['$inc']["donations." + key + ".unknown"] = amount;
+					addTo['$inc']["donations." + key + ".unknown"] = q.amount;
 				} else {
 					result += "error updating person's donations: key value " + value + " is unknown<br>"
 				}
-				//console.log(addTo);//dev
+				console.log(addTo);//dev
 			}
 			
 			
 			var people = db.collection('people');
-			people.updateOne({_id: new ObjectID(to)}, addTo, function(err, data){
+			people.updateOne({_id: new ObjectID(q.to)}, addTo, function(err, data){
 				if(err){
 					result += "error updating person: " + err + "<br>";
 				} else {
