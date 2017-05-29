@@ -1,17 +1,15 @@
 <!DOCTYPE html>
 <head>
-	<title>Politinfluence</title>
+	<title>Politinfluence | Search People</title>
 </head>
 <body>
 	<%if(list.length > 0){ %>
 		<ul>
 			<% list.forEach(function(doc){%>
-				<li> <a href="/info?id=<%= doc._id %>&pageNum=1"><%= doc.name %></a>
-				<% if(doc.state){ %>
+				<li> <a href="/person?id=<%= doc._id %>&pageNum=1&mode=votes"><%= doc.name %></a>
 					<ul>
 						<li> <%= doc.state %>, district <%= doc.district %> </li>
 					</ul>
-				<% } %>
 				</li>
 			<% }); %>
 		</ul>

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<head>
+	<title>Politinfluence | Search Entities</title>
+</head>
+<body>
+	<%if(list.length > 0){ %>
+		<ul>
+			<% list.forEach(function(doc){%>
+				<li> <a href="/entity?id=<%= doc._id %>&pageNum=1"><%= doc.name %></a></li>
+			<% }); %>
+		</ul>
+	<% } if(list.length === 0) { %>
+		<h3>No Results Found.</h3>
+	<% } %>
+</body>
