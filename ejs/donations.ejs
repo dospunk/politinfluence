@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<head>
+	<title>Politinfluence | <%= personObj.name %> donations</title>
+	 <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+	<h1><%= personObj.name %></h1>
+	<a href="/person?id=<%= personObj._id %>&pageNum=1&mode=votes">back to votes</a>
+	
+	<div class="grid">
+		<div class="row">
+			<div class="col-1">
+				<div class="row">
+					<div class="col-1">
+						<h4>Amount</h4>
+					</div>
+					<div class="col-1">
+						<h4>Date</h4>
+					</div>
+				</div>
+			</div>
+			<div class="col-1">
+				<div class="row">
+					<div class="col-1">
+						<h4>From</h4>
+					</div>
+					<div class="col-1">
+						<h4>Donated Through Pac?</h4>
+					</div>
+				</div>
+			</div>
+		</div>
+		<%
+			for(var i = ((pageNum-1)*10); (i < donArr.length && i < pageNum*10); i++){
+			var donation = donArr[i];
+		%>
+			<div class="row">
+				<div class="col-1">
+					<div class="row">
+						<div class="col-1">
+							<h3>$<%= donation.amount %></h3>
+						</div>
+						<div class="col-1">
+							<h3><%= donation.date %></h3>
+						</div>
+					</div>
+				</div>
+				<div class="col-1">
+					<div class="row">
+						<div class="col-1">
+							<h3><a href="/person?id=<%= donation.to %>&pageNum=1">Link</a></h3>
+						</div>
+						<div class="col-1">
+							<h3><%= donation.pac %></h3>
+						</div>
+					</div>
+				</div>
+			</div>
+		<% } %>
+	</div>
+	<center>
+		<% if(pageNum !== 1) { %>
+			<a href="/info?id=<%= personObj._id %>&pageNum=<%= pageNum-1 %>">back</a>
+		<% } %>
+		<a href="/info?id=<%= personObj._id %>&pageNum=<%= pageNum+1 %>">next</a>
+	</center>
+</body>

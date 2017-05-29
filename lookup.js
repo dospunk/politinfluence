@@ -13,7 +13,7 @@ var searchPeople = function(name, state, callback){
 			var arry = people.find({state: state}).toArray();
 			db.close();
 			callback(null, arry);
-		} else if(!state){
+		} else if(state === ""){
 			//console.log("no state");//dev
 			var arry = people.find({name: name}).toArray();
 			db.close();
@@ -62,8 +62,44 @@ var searchEntity = function(name, callback){
 	});
 }
 
+var displayEntity = function(id, callback){
+	mongo.connect("mongodb://127.0.0.1:27017/local", function(err, db){
+		if(err) console.log(err);
+		
+		var entities = db.collection('entities');
+		var donations = db.collection('donations');
+		var objID = new ObjectID(id);
+		
+		var entity = entities.findOne({_id: objID});
+		var donArr = donations.find({'from': objID}).toArray();
+		var array = [entity, donArr];
+		
+		db.close();
+		callback(null, array);
+	});
+}
+
+var displayDonations = function(id, callback){
+	mongo.connect("mongodb://127.0.0.1:27017/local", function(err, db){
+		if(err) console.log(err);
+		
+		var people = db.collection('people');
+		var donations = db.collection('donations');
+		var objID = new ObjectID(id);
+		
+		var entity = people.findOne({_id: objID});
+		var donArr = donations.find({to: objID}).toArray();
+		var array = [entity, donArr];
+		
+		db.close();
+		callback(null, array);
+	});
+}
+
 module.exports = {
 	searchPeople: searchPeople,
 	displayPerson: displayPerson,
 	searchEntity: searchEntity,
+	displayEntity: displayEntity,
+	displayDonations: displayDonations,
 };
