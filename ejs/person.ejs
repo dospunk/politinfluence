@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <head>
-	<title>Politinfluence - <%= personObj.name %></title>
+	<title>Politinfluence | <%= personObj.name %></title>
 	 <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
@@ -8,7 +8,7 @@
 	<p><%= personObj.state %>, district <%= personObj.district %></p>
 	<p>Position: <%= personObj.position %></p>
 	<p><a href="<%= personObj.link %>">Website</a></p>
-	<p> Total donations: $<%= personObj.donations.total %></p>
+	<p> Total donations: $<%= personObj.donations.total %> (<a href="/person?id=<%= personObj._id %>&pageNum=1&mode=donations">View All</a>)</p>
 	
 	<div class="grid">
 		<div class="row">
