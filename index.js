@@ -158,7 +158,7 @@ app.get("/entity", function(req, res){
 		function(callback){
 			callback(null, req.query.id);
 		},
-		lookup.displayEntities,
+		lookup.displayEntity,
 		function(promises, callback){
 			Promise.all(promises).then(function(val){
 				val[1].sort(function(a, b){
