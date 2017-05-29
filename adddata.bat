@@ -1,0 +1,1 @@
+start cmd /k "nodemon add_data/add_data_index.js"
