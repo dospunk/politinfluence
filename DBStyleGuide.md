@@ -78,3 +78,29 @@ Example:
 - Assigned by MongoDB
 
 Example: ObjectId("591a259ddbcdf7492c67139a")
+
+## Entities
+### Fields
+- name
+- link
+- issues
+- \_id
+
+## Donations
+### Fields
+- amount
+- date
+- pac
+- to
+- from
+- \_id
+
+## Votes
+### Fields
+- bill
+- date
+- desc
+- yn
+- issues
+- by
+- \_id
