@@ -6,7 +6,7 @@
 	<%if(list.length > 0){ %>
 		<ul>
 			<% list.forEach(function(doc){%>
-				<li> <a href="/person?id=<%= doc._id %>&pageNum=1&mode=votes"><%= doc.name %></a>
+				<li> <a href="/person?id=<%= doc._id %>&pageNum=1&mode=votes"><%= doc.name.first %> <%= doc.name.middle %> <%= doc.name.last %></a>
 					<ul>
 						<li> <%= doc.state %>, district <%= doc.district %> </li>
 					</ul>

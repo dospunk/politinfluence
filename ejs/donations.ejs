@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <head>
-	<title>Politinfluence | <%= personObj.name %> donations</title>
+	<title>Politinfluence | <%= personObj.name.first %> <%= personObj.name.middle %> <%= personObj.name.last %> donations</title>
 	 <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-	<h1><%= personObj.name %></h1>
+	<h1><%= personObj.name.first %> <%= personObj.name.middle %> <%= personObj.name.last %></h1>
 	<a href="/person?id=<%= personObj._id %>&pageNum=1&mode=votes">back to votes</a>
 	
 	<div class="grid">

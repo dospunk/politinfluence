@@ -1,29 +1,30 @@
 const mongo = require('mongodb').MongoClient;
 const ObjectID = require('mongodb').ObjectID;
 
-var searchPeople = function(name, state, callback){
+var searchPeople = function(q, callback){
 	//console.log("Second waterfall reached");//dev
 	mongo.connect("mongodb://127.0.0.1:27017/local", function(err, db){
 		if(err) console.log(err);
 		
 		var people = db.collection('people');
+		var search = {};
 		
-		if(!name){
-			//console.log("no name");//dev
-			var arry = people.find({state: state}).toArray();
-			db.close();
-			callback(null, arry);
-		} else if(state === ""){
-			//console.log("no state");//dev
-			var arry = people.find({name: name}).toArray();
-			db.close();
-			callback(null, arry);
-		} else {
-			//console.log("name and state");//dev
-			var arry = people.find({name: name, state: state}).toArray();
-			db.close();
-			callback(null, arry);
+		if(q.firstName){
+			search['name.first'] = q.firstName;
 		}
+		if(q.middleName){
+			search['name.middle'] = q.middleName;
+		}
+		if(q.lastName){
+			search['name.last'] = q.lastName;
+		}
+		if(q.state !== ""){
+			search.state = q.state;
+		}
+		
+		var array = people.find(search).toArray();
+		db.close();
+		callback(null, array);
 		
 		//Do not put anything under this that has anything to do with database
 		db.close();

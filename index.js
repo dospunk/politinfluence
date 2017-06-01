@@ -19,6 +19,7 @@ app.get("/", function(req, res){
 });
 
 app.get("/searchPeople", function(req, res){
+	var q = req.query;
 	//console.log("Search loading...");//dev
 	async.waterfall([
 		/**
@@ -26,7 +27,7 @@ app.get("/searchPeople", function(req, res){
 		 */
 		function(callback){
 			//console.log("First waterfall reached");//dev
-			callback(null, req.query.name, req.query.state);
+			callback(null, q);
 		},
 		lookup.searchPeople,
 		/**

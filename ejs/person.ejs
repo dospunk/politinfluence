@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <head>
-	<title>Politinfluence | <%= personObj.name %></title>
+	<title>Politinfluence | <%= personObj.name.first %> <%= personObj.name.middle %> <%= personObj.name.last %></title>
 	 <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-	<h1><%= personObj.name %></h1><h3><%= personObj.party %></h3>
+	<h1><%= personObj.name.first %> <%= personObj.name.middle %> <%= personObj.name.last %></h1><h3><%= personObj.party %></h3>
 	<p><%= personObj.state %>, district <%= personObj.district %></p>
 	<p>Position: <%= personObj.position %></p>
 	<p><a href="<%= personObj.link %>">Website</a></p>
@@ -44,9 +44,11 @@
 				</div>
 				<div class="col-1">
 					<% vote.issues.forEach(function(issue){ %>
-						<h4><%= issue %></h4>
-						<p>Pro: $<%= personObj.donations[issue].pro ? personObj.donations[issue].pro : 0 %></p>
-						<p>Anti: $<%= personObj.donations[issue].anti ? personObj.donations[issue].anti : 0 %></p>
+						<% if(personObj.donations[issue]){ %>
+							<h4><%= issue %></h4>
+							<p>Pro: $<%= personObj.donations[issue].pro %></p>
+							<p>Anti: $<%= personObj.donations[issue].anti %></p>
+						<% } %>
 					<% }); %>
 				</div>
 			</div>
