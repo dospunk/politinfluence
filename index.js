@@ -108,16 +108,8 @@ app.get("/person", function(req, res){
 				callback(null, req.query.id);
 			},
 			lookup.displayPerson,
-			function(promises, callback){
-				Promise.all(promises).then(function(val){
-					val[1].sort(function(a, b){
-						return new Date(b.date) - new Date(a.date);
-					});
-					console.log(val);//dev
-					callback(null, val);
-				});
-			},
 			function(data, callback){
+				//console.log(data[1]);//dev
 				var infoStr = ejs.renderFile('ejs/person.ejs', {personObj: data[0], voteArr: data[1], pageNum: parseInt(req.query.pageNum)}, function(err, str){
 					if(err) console.log(err);
 					res.send(str);

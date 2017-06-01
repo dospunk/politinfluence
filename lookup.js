@@ -36,18 +36,24 @@ var displayPerson = function(id, callback){
 		if(err) console.log(err);
 		
 		var people = db.collection('people');
-		var votes = db.collection('votes');
-		//var donations = db.collection('donations');
+		var bills = db.collection('bills');
 		var objID = new ObjectID(id);
 		
-		var person = people.findOne({_id: objID});
-		//var donationArr = donations.find({to: objID}).toArray();
-		var voteArr = votes.find({by: objID}).toArray();
-		
-		var array = [person, voteArr];
-		
-		db.close();
-		callback(null, array);
+		//wow this is a clusterfuck
+		people.findOne({_id: objID}, function(err, person){
+			var voteArr = person.votes.map(function(vote){
+				return bills.findOne({_id: vote.bill}).then(function(bill){
+					bill.yn = vote.yn;
+					return bill;
+				});
+			});
+			Promise.all(voteArr).then(function(voteArr){
+				var array = [person, voteArr];
+				
+				db.close();
+				callback(null, array);
+			});
+		});
 	});
 }
 
