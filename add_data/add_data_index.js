@@ -30,53 +30,32 @@ app.get('/vote', function(req, res){
 
 app.get('/update', function(req, res){
 	var send = "";
-	if(req.query.type === "person"){
-		send += 'db.runCommand({findAndModify: "people",query: { _id: ObjectId("' + req.query.id + '") },update: {';
-		if(req.query.name !== ""){
-			send += ' name: "' + req.query.name + '",';
-		}
-		if(req.query.party !== ""){
-			send += ' party: "' + req.query.party + '",';
-		}
-		if(req.query.link !== ""){
-			send += ' link: "' + req.query.link + '",';
-		}
-		if(req.query.state !== ""){
-			send += ' state: "' + req.query.state + '",';
-		}
-		if(req.query.district !== ""){
-			send += ' district: ' + req.query.district + ',';
-		}
-		if(req.query.position !== ""){
-			send += ' position: "' + req.query.position + '",';
-		}
-		if(req.query.donations !== ""){
-			send += ' donations: ' + req.query.donations;
-		}
-		
-	} else if(req.query.type === "entity"){
+	var q = req.query;
+	if(q.type === "person"){
+		send += updatePersonFunc(q, res);
+	} else if(q.type === "entity"){
 		res.send("Not implemented yet");
-	} else if(req.query.type === "donation"){
+	} else if(q.type === "donation"){
 		res.send("Not implemented yet");
-	} else if(req.query.type === "vote"){
+	} else if(q.type === "vote"){
 		res.send("Not implemented yet");
 	} else {
 		res.send("Unknown Type");
 	}
-	send += '},new: true})';
+	send += '}},new: true})';
 	res.send(send);
 });
 
 app.get('/add', function(req, res){
 	var q = req.query;
-	if(req.query.type === "person"){
+	if(q.type === "person"){
 		addPersonFunc(q, res);
-	} else if(req.query.type === "entity"){
+	} else if(q.type === "entity"){
 		addEntityFunc(q, res);
-	} else if(req.query.type === "donation"){
+	} else if(q.type === "donation"){
 		addDonationFunc(q, res);
-	} else if(req.query.type === "vote"){
-		res.send("Not Implemented Yet");
+	} else if(q.type === "vote"){
+		addVoteFunc(q, res);
 	} else {
 		res.send("Unknown Type");
 	}
@@ -143,7 +122,7 @@ function addDonationFunc(q, res){
 					result += "person updated successfully<br>";
 				}
 				db.close();
-				res.send(result);
+				res.send(result + '<br><a href="/donation"></a>');
 			});
 		});
 	});
@@ -151,7 +130,7 @@ function addDonationFunc(q, res){
 
 function addPersonFunc(q, res){
 	var person = {
-		name: q.name,
+		name: JSON.parse(q.name),
 		party: q.party,
 		link: q.link,
 		state: q.state,
@@ -187,4 +166,52 @@ function addEntityFunc(q, res){
 			res.send(result + "<br><br><a href=\"/entity\">back</a>");
 		});
 	});
+}
+
+function addVoteFunc(q, res){
+	var vote = {
+		bill: q.bill,
+		desc: q.desc,
+		issues: q.issues.split(","),
+		yn = q.yn,
+		by: new ObjectID(q.by),
+		date: q.date
+	}
+	mongo.connect("mongodb://127.0.0.1:27017/local", function(err, db){
+		if(err) console.log(err);
+		
+		var votes = db.collection("votes");
+		votes.insertOne(vote, function(err, result){
+			if(err) console.log(err);
+			
+			db.close();
+			res.send(result + '<br><br><a href="/vote">back</a>');
+		});
+	});
+}
+
+function updatePersonFunc(q, res){
+	var send = 'db.runCommand({findAndModify: "people",query: { _id: ObjectId("' + q.id + '") },update: { $set: {';
+	if(q.name !== ""){
+		send += ' name: ' + q.name + ',';
+	}
+	if(q.party !== ""){
+		send += ' party: "' + q.party + '",';
+	}
+	if(q.link !== ""){
+		send += ' link: "' + q.link + '",';
+	}
+	if(q.state !== ""){
+		send += ' state: "' + q.state + '",';
+	}
+	if(q.district !== ""){
+		send += ' district: ' + q.district + ',';
+	}
+	if(q.position !== ""){
+		send += ' position: "' + q.position + '",';
+	}
+	if(q.donations !== ""){
+		send += ' donations: ' + q.donations;
+	}
+	return send;
 }
