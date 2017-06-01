@@ -1,4 +1,5 @@
 const mongo = require('mongodb').MongoClient;
+//paste data here
 const everyone = [];
 
 mongo.connect("mongodb://127.0.0.1:27017/local", function(err, db){
