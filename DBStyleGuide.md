@@ -9,6 +9,7 @@
 - [district](#district)
 - [position](#position)
 - [donations](#donations)
+- votes
 - [\_id](#_id)
 
 #### Name
@@ -73,6 +74,16 @@ Example:
        }
     }
 
+#### Votes
+- Must be a JSON object containing the ObjectId of the bill in question with the key 'bill' and the vote 'y' or 'n' with they key 'yn'
+
+Example:
+
+    {
+       bill: ObjectId("123a456bcdefg7890h12345i"),
+       yn: 'y'
+    }
+
 #### \_id
 - Must be an ObjectID Object
 - Assigned by MongoDB
@@ -95,12 +106,10 @@ Example: ObjectId("591a259ddbcdf7492c67139a")
 - from
 - \_id
 
-## Votes
+## Bills
 ### Fields
-- bill
+- name
 - date
 - desc
-- yn
 - issues
-- by
 - \_id
