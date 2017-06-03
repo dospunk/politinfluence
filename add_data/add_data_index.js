@@ -110,7 +110,7 @@ function addDonationFunc(q, res){
 				} else {
 					result += "error updating person's donations: key value " + value + " is unknown<br>"
 				}
-				console.log(addTo);//dev
+				//console.log(addTo);//dev
 			}
 			
 			
@@ -214,4 +214,39 @@ function updatePersonFunc(q, res){
 		send += ' donations: ' + q.donations;
 	}
 	return send;
+}
+
+/*
+ * This is all wrong. It should start at the entity not the person
+ * 
+ * Actually, this could work. If, when you update the entity, you go through each donation that the entity has made
+ * and run this on each person that the entity has made donations to, it would work but be very slow with a lot of data.
+ *
+ * In short, needs major rework
+ */
+function updatePersonDonations(person){
+	mongo.connect("mongodb://127.0.0.1:27017/local", function(err, db){
+		var people = db.collection("people");
+		people.updateOne({_id: person._id}, {$set:{donations:{total:0}}}, function(err, val){
+			if(err) console.log(err);
+		});
+		
+		var donations = db.collection("donations");
+		var donationsArr = donations.find({to: person._id}).toArray().then(function(arr){
+			return arr;
+		});
+		
+		var entities = db.collection("entities");
+		var moneyAndIssuesArr = donationsArr.map(function(donation){
+			return entities.findOne({_id: donation['from']}).then(function(entity){
+				return {
+					amount: donation.amount,
+					issues: entity.issues
+				}
+			});
+		});
+		
+		//resolve moneyAndIssuesArr
+		//go through each object and increment in person.donations where needed
+	});
 }
