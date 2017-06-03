@@ -6,4 +6,9 @@ a site to compare political donations to votes
 - MongoDB
 
 # Warnings
-- Do not use the update functions of the Add/Update Tools unless you put in all the data
+- Add/Update tools are risky to use. Don't assume that one working will mean another works.
+- Database structure is subject to change.
+
+# Sources
+- [unitedstates](https://github.com/unitedstates)
+- [FEC Official Data](https://www.fec.gov/data)
