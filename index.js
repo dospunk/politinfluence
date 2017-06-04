@@ -130,7 +130,7 @@ app.get("/person", function(req, res){
 					val[1].sort(function(a, b){
 						return new Date(b.date) - new Date(a.date);
 					});
-					console.log(val);//dev
+					//console.log(val);//dev
 					callback(null, val);
 				});
 			},

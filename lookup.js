@@ -25,9 +25,6 @@ var searchPeople = function(q, callback){
 		var array = people.find(search).toArray();
 		db.close();
 		callback(null, array);
-		
-		//Do not put anything under this that has anything to do with database
-		db.close();
 	});
 }
 
