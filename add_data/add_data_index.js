@@ -29,12 +29,11 @@ app.get('/vote', function(req, res){
 });
 
 app.get('/update', function(req, res){
-	var send = "";
 	var q = req.query;
 	if(q.type === "person"){
 		send += updatePersonFunc(q, res);
 	} else if(q.type === "entity"){
-		res.send("Not implemented yet");
+		updateEntityFunc(q, res);
 	} else if(q.type === "donation"){
 		res.send("Not implemented yet");
 	} else if(q.type === "vote"){
@@ -42,8 +41,6 @@ app.get('/update', function(req, res){
 	} else {
 		res.send("Unknown Type");
 	}
-	send += '}},new: true})';
-	res.send(send);
 });
 
 app.get('/add', function(req, res){
@@ -91,7 +88,7 @@ function addDonationFunc(q, res){
 		
 		var entities = db.collection('entities');
 		entities.findOne({_id: new ObjectID(q['from'])}).then(function(val){
-			console.log(val);//dev
+			//console.log(val);//dev
 			
 			var addTo = { $inc: {
 				'donations.total': q.amount
@@ -122,7 +119,7 @@ function addDonationFunc(q, res){
 					result += "person updated successfully<br>";
 				}
 				db.close();
-				res.send(result + '<br><a href="/donation"></a>');
+				res.send(result + '<br><a href="/donation">back</a>');
 			});
 		});
 	});
@@ -168,12 +165,12 @@ function addEntityFunc(q, res){
 	});
 }
 
-function addVoteFunc(q, res){
+function addVoteFunc(q, res){ //should be changed to add Bills
 	var vote = {
 		bill: q.bill,
 		desc: q.desc,
 		issues: q.issues.split(","),
-		yn = q.yn,
+		yn: q.yn,
 		by: new ObjectID(q.by),
 		date: q.date
 	}
@@ -216,6 +213,69 @@ function updatePersonFunc(q, res){
 	return send;
 }
 
+function updateEntityFunc(q, res){
+	mongo.connect("mongodb://127.0.0.1:27017/local", function(err, db){
+		if(err) console.log(err);
+		
+		var send = "";
+		var entities = db.collection("entities");
+		var donations = db.collection("donations");
+		var people = db.collection("people");
+		var newData = {$set: {}};
+		
+		if(q.link){
+			newData.$set.link = q.link;
+		}
+		if(q.issues){
+			newData.$set.issues = q.issues;
+		}
+		if(q.name){
+			newData.$set.name = q.name;
+		}
+		
+		entities.update({_id: new ObjectID(q.id)}, newData, function(err, result){
+			if(err) send += err + '<br><br>';
+			if(result) send += result + '<br><br>';
+			if(!newData.$set.issues){
+				send += '<br><a href="/entity">back</a>';
+				db.close();
+				res.send(send);
+			}
+		});
+		
+		//for every person donated to, update donations is issues were updated
+		if(newData.$set.issues){
+			donations.find({'from': new ObjectID(q.id)}).toArray(function(err, donationArr){
+				if(err) console.log(err);
+			
+				var peopleUpdatedArr = donationArr.map(function(donation){
+					return people.findOne({_id: donation.to}).then(function(person){
+						send += "Updated " + person.name.first + " " + person.name.last + " from " + person.state + "'s donations. Their ID is " + person._id + "<br>";
+						return updatePersonDonations(person);
+					},
+					function(rejected){
+						send += rejected + "<br>";
+					});
+				});
+				
+				Promise.all(peopleUpdatedArr).then(function(arr){
+					arr.forEach(function(updateResult){
+						//console.log(updateResult);//dev
+						send += updateResult;
+					});
+					
+					send += '<br><a href="/entity">back</a>';
+					res.send(send);
+					db.close();
+				},
+				function(rejected){
+					console.log(rejected);
+				});
+			});
+		}
+	});
+}
+
 /*
  * This is all wrong. It should start at the entity not the person
  * 
@@ -225,28 +285,103 @@ function updatePersonFunc(q, res){
  * In short, needs major rework
  */
 function updatePersonDonations(person){
+	var result = "";
 	mongo.connect("mongodb://127.0.0.1:27017/local", function(err, db){
 		var people = db.collection("people");
-		people.updateOne({_id: person._id}, {$set:{donations:{total:0}}}, function(err, val){
-			if(err) console.log(err);
-		});
-		
 		var donations = db.collection("donations");
-		var donationsArr = donations.find({to: person._id}).toArray().then(function(arr){
-			return arr;
-		});
-		
 		var entities = db.collection("entities");
-		var moneyAndIssuesArr = donationsArr.map(function(donation){
-			return entities.findOne({_id: donation['from']}).then(function(entity){
-				return {
-					amount: donation.amount,
-					issues: entity.issues
-				}
-			});
-		});
 		
-		//resolve moneyAndIssuesArr
-		//go through each object and increment in person.donations where needed
+		async.waterfall([
+			function(callback){
+				//reset donations
+				//console.log("1 waterfall reached");//dev
+				people.updateOne({_id: person._id}, {$set:{donations:{total:0}}}, function(err, val){
+					if(err) console.log(err);
+					if(val) result += "Set donations to 0<br>";
+					callback(null);
+				});
+			},
+			function(callback){
+				//find all donations to the person
+				//console.log("2 waterfall reached");//dev
+				donations.find({to: person._id}).toArray(function(err, arr){
+					if(err) console.log(err);
+					//console.log(arr)//dev
+					
+					callback(null, arr);
+				});
+			},
+			function(donationsArr, callback){
+				//console.log("3 waterfall reached");//dev
+				var moneyAndIssuesArr = donationsArr.map(function(donation){
+					//find the entity that gave the money
+					return entities.findOne({_id: donation['from']}).then(function(entity){
+						//create an array of donation amounts and relevant issues
+						return {
+							amount: donation.amount,
+							issues: entity.issues
+						};
+					},
+					function(rejected){
+						console.log(rejected);
+					});
+				});
+				
+				Promise.all(moneyAndIssuesArr).then(function(result){
+					//console.log(result);//dev
+					callback(null, result);
+				},
+				function(rejected){
+					console.log(rejected);
+				});
+			},
+			function(moneyAndIssuesArr, callback){
+				//console.log("4 waterfall reached");//dev
+				var resultsArr = moneyAndIssuesArr.map(function(obj){
+					var addTo = {
+						$inc: {
+							'donations.total': obj.amount
+						}
+					};
+					for(var key in obj.issues){
+						if (!obj.issues.hasOwnProperty(key)) continue;
+						
+						//console.log(key + ": " + obj.issues[key]);//dev
+						
+						if(obj.issues[key] === 'pro' || obj.issues[key] ==='ppro'){
+							addTo['$inc']["donations." + key + '.pro'] = obj.amount;
+						} else if(obj.issues[key] === 'anti' || obj.issues[key] ==='panti'){
+							addTo['$inc']["donations." + key + '.anti'] = obj.amount;
+						} else if(obj.issues[key] === "unknown"){
+							addTo['$inc']["donations." + key + ".unknown"] = obj.amount;
+						} else {
+							result += "error updating person's donations: key value " + obj.issues[key] + " is unknown<br>"
+						}
+						//console.log(addTo);//dev
+					}
+					return people.updateOne({_id: person._id}, addTo).then(function(result){
+						return result;
+					},
+					function(rejected){
+						console.log(rejected);
+					});
+				});
+				Promise.all(resultsArr).then(function(results){
+					//console.log(results);//dev
+					callback(null);
+				},
+				function(rejected){
+					console.log(rejected);
+					callback(null);
+				});
+			}
+		], function(err){
+			if(err) console.log(err);
+			//console.log("5 waterfall reached");//dev
+			
+			db.close();
+		});
 	});
+	//This isn't actually gonna help with anything because its not synchronous
+	return result;
 }
