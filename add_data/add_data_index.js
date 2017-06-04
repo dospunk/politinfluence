@@ -67,7 +67,7 @@ server.listen(3005, function(){
 function addDonationFunc(q, res){
 	var result = "";
 	q.amount = parseFloat(q.amount);
-	mongo.connect("mongodb://127.0.0.1:27017/local", function(err, db){
+	mongo.connect("mongodb://127.0.0.1:27017/politinfluence", function(err, db){
 		if(err) console.log(err);
 		
 		var donations = db.collection('donations');
@@ -135,7 +135,7 @@ function addPersonFunc(q, res){
 		position: q.position,
 		donations: q.donations
 	};
-	mongo.connect("mongodb://127.0.0.1:27017/local", function(err, db){
+	mongo.connect("mongodb://127.0.0.1:27017/politinfluence", function(err, db){
 		var people = db.collection("people");
 		people.insertOne(person, function(err, result){
 			if(err) console.log(err);
@@ -152,7 +152,7 @@ function addEntityFunc(q, res){
 		issues: JSON.parse(q.issues),
 		link: q.link
 	};
-	mongo.connect("mongodb://127.0.0.1:27017/local", function(err, db){
+	mongo.connect("mongodb://127.0.0.1:27017/politinfluence", function(err, db){
 		if(err) console.log(err);
 		
 		var entities = db.collection("entities");
@@ -174,7 +174,7 @@ function addVoteFunc(q, res){ //should be changed to add Bills
 		by: new ObjectID(q.by),
 		date: q.date
 	}
-	mongo.connect("mongodb://127.0.0.1:27017/local", function(err, db){
+	mongo.connect("mongodb://127.0.0.1:27017/politinfluence", function(err, db){
 		if(err) console.log(err);
 		
 		var votes = db.collection("votes");
@@ -214,7 +214,7 @@ function updatePersonFunc(q, res){
 }
 
 function updateEntityFunc(q, res){
-	mongo.connect("mongodb://127.0.0.1:27017/local", function(err, db){
+	mongo.connect("mongodb://127.0.0.1:27017/politinfluence", function(err, db){
 		if(err) console.log(err);
 		
 		var send = "";
@@ -286,7 +286,7 @@ function updateEntityFunc(q, res){
  */
 function updatePersonDonations(person){
 	var result = "";
-	mongo.connect("mongodb://127.0.0.1:27017/local", function(err, db){
+	mongo.connect("mongodb://127.0.0.1:27017/politinfluence", function(err, db){
 		var people = db.collection("people");
 		var donations = db.collection("donations");
 		var entities = db.collection("entities");

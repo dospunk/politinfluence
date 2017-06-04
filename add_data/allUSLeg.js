@@ -2,7 +2,7 @@ const mongo = require('mongodb').MongoClient;
 //paste data here
 const everyone = [];
 
-mongo.connect("mongodb://127.0.0.1:27017/local", function(err, db){
+mongo.connect("mongodb://127.0.0.1:27017/politinfluence", function(err, db){
 	everyone.forEach(function(person){
 		if(new Date(person.terms[person.terms.length-1].end) < new Date(2017/06/01)){}
 		else {

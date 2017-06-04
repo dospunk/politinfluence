@@ -3,7 +3,7 @@ const ObjectID = require('mongodb').ObjectID;
 
 var searchPeople = function(q, callback){
 	//console.log("Second waterfall reached");//dev
-	mongo.connect("mongodb://127.0.0.1:27017/local", function(err, db){
+	mongo.connect("mongodb://127.0.0.1:27017/politinfluence", function(err, db){
 		if(err) console.log(err);
 		
 		var people = db.collection('people');
@@ -29,19 +29,21 @@ var searchPeople = function(q, callback){
 }
 
 var displayPerson = function(id, callback){
-	mongo.connect("mongodb://127.0.0.1:27017/local", function(err, db){
+	mongo.connect("mongodb://127.0.0.1:27017/politinfluence", function(err, db){
 		if(err) console.log(err);
 		
 		var people = db.collection('people');
 		var bills = db.collection('bills');
 		var objID = new ObjectID(id);
 		
-		//wow this is a clusterfuck
 		people.findOne({_id: objID}, function(err, person){
 			var voteArr = person.votes.map(function(vote){
 				return bills.findOne({_id: vote.bill}).then(function(bill){
-					bill.yn = vote.yn;
+					if(bill) bill.yn = vote.yn;
 					return bill;
+				},
+				function(rejected){
+					console.log(rejected);
 				});
 			});
 			Promise.all(voteArr).then(function(voteArr){
@@ -49,13 +51,17 @@ var displayPerson = function(id, callback){
 				
 				db.close();
 				callback(null, array);
+			},
+			function(rejected){
+				console.log(rejected);
+				db.close();
 			});
 		});
 	});
 }
 
 var searchEntity = function(name, callback){
-	mongo.connect("mongodb://127.0.0.1:27017/local", function(err, db){
+	mongo.connect("mongodb://127.0.0.1:27017/politinfluence", function(err, db){
 		if(err) console.log(err);
 		
 		var entities = db.collection('entities');
@@ -67,7 +73,7 @@ var searchEntity = function(name, callback){
 }
 
 var displayEntity = function(id, callback){
-	mongo.connect("mongodb://127.0.0.1:27017/local", function(err, db){
+	mongo.connect("mongodb://127.0.0.1:27017/politinfluence", function(err, db){
 		if(err) console.log(err);
 		
 		var entities = db.collection('entities');
@@ -84,7 +90,7 @@ var displayEntity = function(id, callback){
 }
 
 var displayDonations = function(id, callback){
-	mongo.connect("mongodb://127.0.0.1:27017/local", function(err, db){
+	mongo.connect("mongodb://127.0.0.1:27017/politinfluence", function(err, db){
 		if(err) console.log(err);
 		
 		var people = db.collection('people');
