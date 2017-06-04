@@ -1,6 +1,8 @@
 # Politinfluence
 a site to compare political donations to votes
 
+#### [Click here for the data](https://github.com/dospunk/politinfluence_data)
+
 # Requirements
 - Node.js (with nodemon)
 - MongoDB
