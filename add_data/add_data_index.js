@@ -75,8 +75,7 @@ function addDonationFunc(q, res){
 			amount: q.amount,
 			date: q.date,
 			to: new ObjectID(q.to),
-			'from': new ObjectID(q["from"]),
-			pac: q.pac
+			'from': new ObjectID(q["from"])
 		};
 		donations.insert(donation, function(err, data){
 			if(err){
@@ -86,6 +85,7 @@ function addDonationFunc(q, res){
 			}
 		});
 		
+		//update person's donations
 		var entities = db.collection('entities');
 		entities.findOne({_id: new ObjectID(q['from'])}).then(function(val){
 			//console.log(val);//dev
