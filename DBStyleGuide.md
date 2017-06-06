@@ -9,7 +9,7 @@
 - [district](#district)
 - [position](#position)
 - [donations](#donations)
-- votes
+- [votes](#votes)
 - [\_id](#_id)
 
 #### Name
@@ -75,7 +75,9 @@ Example:
     }
 
 #### Votes
-- Must be a JSON object containing the ObjectId of the bill in question with the key 'bill' and the vote 'y' or 'n' with they key 'yn'
+- Must be a JSON object containing
+    - the ObjectId of the bill in question with the key 'bill'
+    - the vote 'y' or 'n' with they key 'yn' (must be lowercase)
 
 Example:
 
