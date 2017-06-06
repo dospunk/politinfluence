@@ -8,6 +8,8 @@ This document is to provide a standard naming system for issues and positions. S
 
 When labling entitiies, follow the rule of labling sparsly but using `ppro` and `panti` liberally. This means be cautious in labling an entity, but when you do, do not label them as definitely pro/anti unless they have a clear, _stated_ stance.
 
+## Issues
+
 more to be added as they come up
 
 - Big Business
