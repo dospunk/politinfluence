@@ -104,10 +104,10 @@ Example: ObjectId("591a259ddbcdf7492c67139a")
 This collection contains data about companies, PACs, etc.
 
 ### Fields
-- name
-- link
-- issues
-- \_id
+- [name](#name-1)
+- [link](#link-1)
+- [issues](#issues)
+- [\_id](_id-1)
 
 #### Name
 - Must be a String containing the name of the company/PAC/etc.
