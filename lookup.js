@@ -18,7 +18,7 @@ var searchPeople = function(q, callback){
 		if(q.lastName){
 			search['name.last'] = q.lastName;
 		}
-		if(q.state !== ""){
+		if(q.state){
 			search.state = q.state;
 		}
 		
