@@ -21,3 +21,6 @@ more to be added as they come up
 - Pharmaceutical Industry
     - pro: Wants less regulation on the sale of pharmaceuticals
     - anti: Wants more regulation on the sale of pharmaceuticals
+- Environmentalism
+    - pro: Suports renewable, clean energy (solar, wind, geothermal, etc.), sustainability, and preservation of the natural environment.
+    - anti: Supports nonrenewable, polluting energy (coal, oil, fracking, etc.) and does not support preservation of the natural environment.
