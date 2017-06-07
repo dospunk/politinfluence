@@ -146,7 +146,7 @@ Example: ObjectId("591a259ddbcdf7492c67139a")
 - amount
 - date
 - to
-- from
+- [from](#from)
 - \_id
 
 #### Amount
