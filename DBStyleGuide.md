@@ -156,6 +156,8 @@ Example: ObjectId("591a259ddbcdf7492c67139a")
 #### To
 
 #### From
+- Should be the ObjectId of the Entity that made the donation
+- Can be String if Entity has not been created yet. Should be in the form "<person's name>, <person's occupation> at <person's employer>"
 
 #### \_id
 - Must be an ObjectID
