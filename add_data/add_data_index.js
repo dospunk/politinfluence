@@ -35,7 +35,7 @@ app.get('/update', function(req, res){
 	} else if(q.type === "entity"){
 		updateEntityFunc(q, res);
 	} else if(q.type === "donation"){
-		res.send("Not implemented yet");
+		updateDonationFunc(q, res);
 	} else if(q.type === "vote"){
 		res.send("Not implemented yet");
 	} else {
@@ -121,6 +121,11 @@ function addDonationFunc(q, res){
 				db.close();
 				res.send(result + '<br><a href="/donation">back</a>');
 			});
+		},
+		function(rejected){
+			result += rejected;
+			db.close();
+			res.send(result + '<br><a href="/donation">back</a>');
 		});
 	});
 }
@@ -288,6 +293,46 @@ function updateEntityFunc(q, res){
 	});
 }
 
+function updateDonationFunc(q, res){
+	mongo.connect("mongodb://127.0.0.1:27017/politinfluence", function(err, db){
+		if(err) console.log(err);
+		
+		var donations = db.collection("donations");
+		var people = db.collection("people");
+		var addTo = { $set: {}};
+		
+		if(q.amount){
+			addTo.$set.amount = q.amount;
+		}
+		if(q.date){
+			addTo.$set.date = q.date;
+		}
+		if(q.to){
+			addTo.$set.to = new ObjectID(q.to);
+		}
+		if(q['from']){
+			addTo.$set['from'] = new ObjectID(q['from']);
+		}
+		
+		donations.updateOne({_id: new ObjectID(q.id)}, addTo, function(err, result){
+			if(err){
+				db.close();
+				res.send(err + '<br><a href="/donation">back</a>');
+			} else {
+				donations.findOne({_id: new ObjectID(q.id)}, function(err, don){
+					if(err){
+						db.close();
+						res.send(result + "<br>" + err + '<br><a href="/donation">back</a>');
+					} else {
+						updatePersonDonations({_id: don.to});
+						res.send(result + "<br>" + don + '<br><a href="/donation">back</a>');
+					}
+				});
+			}
+		});
+	});
+}
+
 /*
  * This is all wrong. It should start at the entity not the person
  * 
@@ -327,16 +372,25 @@ function updatePersonDonations(person){
 				//console.log("3 waterfall reached");//dev
 				var moneyAndIssuesArr = donationsArr.map(function(donation){
 					//find the entity that gave the money
-					return entities.findOne({_id: donation['from']}).then(function(entity){
-						//create an array of donation amounts and relevant issues
+					if(typeof donation["from"] === 'string'){
 						return {
 							amount: donation.amount,
-							issues: entity.issues
+							issues: {
+								"Unknown": "unknown"
+							}
 						};
-					},
-					function(rejected){
-						console.log(rejected);
-					});
+					} else {
+						return entities.findOne({_id: donation['from']}).then(function(entity){
+							//create an array of donation amounts and relevant issues
+							return {
+								amount: donation.amount,
+								issues: entity.issues
+							};
+						},
+						function(rejected){
+							console.log(rejected);
+						});
+					}
 				});
 				
 				Promise.all(moneyAndIssuesArr).then(function(result){
