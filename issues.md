@@ -18,3 +18,6 @@ more to be added as they come up
 - Gun Control
     - pro: Wants stricter regulations on gun sale and ownership
     - anti: Wants less regulations on gun sale and ownership
+- Pharmaceutical Industry
+    - pro: Wants less regulation on the sale of pharmaceuticals
+    - anti: Wants more regulation on the sale of pharmaceuticals
