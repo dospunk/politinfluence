@@ -24,8 +24,8 @@ app.get('/donation', function(req, res){
 	res.sendFile('./html/donation.html', {root: __dirname});
 });
 
-app.get('/vote', function(req, res){
-	res.sendFile('./html/vote.html', {root: __dirname});
+app.get('/bill', function(req, res){
+	res.sendFile('./html/bill.html', {root: __dirname});
 });
 
 app.get('/update', function(req, res){
@@ -51,8 +51,8 @@ app.get('/add', function(req, res){
 		addEntityFunc(q, res);
 	} else if(q.type === "donation"){
 		addDonationFunc(q, res);
-	} else if(q.type === "vote"){
-		addVoteFunc(q, res);
+	} else if(q.type === "bill"){
+		addBillFunc(q, res);
 	} else {
 		res.send("Unknown Type");
 	}
@@ -127,21 +127,30 @@ function addDonationFunc(q, res){
 
 function addPersonFunc(q, res){
 	var person = {
-		name: JSON.parse(q.name),
+		name: {
+			first: q.firstName,
+			middle: q.middleName,
+			last: q.lastName
+		},
 		party: q.party,
 		link: q.link,
 		state: q.state,
 		district: parseInt(q.district),
 		position: q.position,
-		donations: q.donations
+		donations: {
+			total: 0
+		},
+		votes: [{}]
 	};
 	mongo.connect("mongodb://127.0.0.1:27017/politinfluence", function(err, db){
 		var people = db.collection("people");
 		people.insertOne(person, function(err, result){
-			if(err) console.log(err);
-			
 			db.close();
-			res.send(result + "<br><br><a href=\"/person\">back</a>");
+			if(err){
+				res.send(err + '<br><br><a href="/person">back</a>');
+			} else {
+				res.send(result + '<br><br><a href="/person">back</a>');
+			}
 		});
 	});
 }
@@ -165,24 +174,27 @@ function addEntityFunc(q, res){
 	});
 }
 
-function addVoteFunc(q, res){ //should be changed to add Bills
-	var vote = {
-		bill: q.bill,
+function addBillFunc(q, res){ 
+	var bill = {
+		name: q.name,
 		desc: q.desc,
 		issues: q.issues.split(","),
-		yn: q.yn,
-		by: new ObjectID(q.by),
 		date: q.date
 	}
 	mongo.connect("mongodb://127.0.0.1:27017/politinfluence", function(err, db){
-		if(err) console.log(err);
-		
-		var votes = db.collection("votes");
-		votes.insertOne(vote, function(err, result){
-			if(err) console.log(err);
-			
+		if(err){
 			db.close();
-			res.send(result + '<br><br><a href="/vote">back</a>');
+			res.send(err);
+		}
+		
+		var bills = db.collection("bills");
+		bills.insertOne(bill, function(err, result){
+			db.close();
+			if(err){
+				res.send(err + '<br><br><a href="/bill">back</a>');
+			} else {
+				res.send(result + '<br><br><a href="/bill">back</a>');
+			}
 		});
 	});
 }
@@ -210,7 +222,7 @@ function updatePersonFunc(q, res){
 	if(q.donations !== ""){
 		send += ' donations: ' + q.donations;
 	}
-	return send;
+	res.send(send);
 }
 
 function updateEntityFunc(q, res){
