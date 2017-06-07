@@ -50,6 +50,7 @@ var displayPerson = function(id, callback){
 				var array = [person, voteArr];
 				
 				db.close();
+				console.log(array);//dev
 				callback(null, array);
 			},
 			function(rejected){

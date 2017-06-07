@@ -27,7 +27,7 @@
 			</div>
 		</div>
 		<%
-			if(vote) {
+			if(voteArr[0]) {
 				for(var i = ((pageNum-1)*10); (i < voteArr.length && i < pageNum*10); i++){
 				var vote = voteArr[i];
 		%>
@@ -57,7 +57,7 @@
 				}
 			}
 		%>
-		<% if(!vote){ %>
+		<% if(!voteArr[0]){ %>
 			<h1>Sorry, no data is available at this time.</h1>
 		<% } %>
 	</div>
