@@ -1,28 +1,24 @@
 <!DOCTYPE html>
 <head>
-	<title>Add or Update Vote</title>
+	<title>Add or Update Bill</title>
 </head>
 <body>
 	<h1>Add</h1>
 	<form action="/add" method="get">
-		Bill: <input name="bill" />
+		Name: <input name="name" />
 		<br><br>
 		Date: <input name="date" /> In the form (YYYY/MM/DD)
 		<br><br>
 		Issues:<br>(seperate terms with only commas)<br><textarea name="issues"></textarea>
 		<br><br>
-		YN: <input name="yn" />
-		<br><br>
-		By: <input name="by" />
-		<br><br>
 		Desc:<br><textarea name="desc"></textarea>
 		<br><br>
-		<input name="type" value="vote" style="display: none;" />
+		<input name="type" value="bill" style="display: none;" />
 		<button>Submit</button>
 	</form>
 	<h1>Update</h1>
 	<form action="/update" method="get">
-		_id: <input name="id" />
+		_id: ObjectId("<input name="id" />")
 		<br><br>
 		Bill: <input name="bill" />
 		<br><br>
@@ -30,13 +26,9 @@
 		<br><br>
 		Issues:<br>(seperate terms with only commas)<br><textarea name="issues"></textarea>
 		<br><br>
-		YN: <input name="yn" />
-		<br><br>
-		By: <input name="by" />
-		<br><br>
 		Desc:<br><textarea name="desc"></textarea>
 		<br><br>
-		<input name="type" value="vote" style="display: none;" />
+		<input name="type" value="bill" style="display: none;" />
 		<button>Submit</button>
 	</form>
 	</form>
