@@ -3,6 +3,7 @@
 	<title>Add or Update Person</title>
 </head>
 <body>
+	<a href="/">Home</a>
 	<h1>Add</h1>
 	<form action="/add" method="get">
 		First Name: <input name="firstName" />
@@ -152,6 +153,12 @@
 		Votes: <textarea name="votes"></textarea>
 		<br><br>
 		<input name="type" value="person" style="display: none;" />
+		<button>Submit</button>
+	</form>
+	<h1>Update Donations</h1>
+	<form action="/upDon" method="get">
+		_id: ObjectID("<input name="id" />")
+		<br><br>
 		<button>Submit</button>
 	</form>
 </body>

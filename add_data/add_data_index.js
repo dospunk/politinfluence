@@ -28,6 +28,12 @@ app.get('/bill', function(req, res){
 	res.sendFile('./html/bill.html', {root: __dirname});
 });
 
+app.get('/upDon', function(req, res){
+	var a = new ObjectID(req.query.id);
+	updatePersonDonations({_id: a});
+	res.send("Person should be updated");
+});
+
 app.get('/update', function(req, res){
 	var q = req.query;
 	if(q.type === "person"){
@@ -244,7 +250,7 @@ function updateEntityFunc(q, res){
 			newData.$set.link = q.link;
 		}
 		if(q.issues){
-			newData.$set.issues = q.issues;
+			newData.$set.issues = JSON.parse(q.issues);
 		}
 		if(q.name){
 			newData.$set.name = q.name;
@@ -370,8 +376,10 @@ function updatePersonDonations(person){
 			},
 			function(donationsArr, callback){
 				//console.log("3 waterfall reached");//dev
+				//create an array of donation amounts and relevant issues
 				var moneyAndIssuesArr = donationsArr.map(function(donation){
 					//find the entity that gave the money
+					//if the from value is a string, the issues are unknown
 					if(typeof donation["from"] === 'string'){
 						return {
 							amount: donation.amount,
@@ -379,13 +387,19 @@ function updatePersonDonations(person){
 								"Unknown": "unknown"
 							}
 						};
+					//if it's an objectID, get the issues from that objectID
 					} else {
 						return entities.findOne({_id: donation['from']}).then(function(entity){
-							//create an array of donation amounts and relevant issues
-							return {
+							var x = {
 								amount: donation.amount,
-								issues: entity.issues
+								issues: {}
 							};
+							for(var issue in entity.issues){
+								if (!entity.issues.hasOwnProperty(issue)) continue;
+								
+								x.issues[issue] = entity.issues[issue].pos;
+							}
+							return x;
 						},
 						function(rejected){
 							console.log(rejected);
