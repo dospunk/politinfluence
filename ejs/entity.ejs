@@ -8,7 +8,15 @@
 	<p><a href="<%= entityObj.link %>">Website</a></p>
 	<b>Issues:</b>
 	<% for(var key in entityObj.issues){ %>
-		<p><%= key %>: <%= entityObj.issues[key] %></p>
+		<p>
+			<%= key %>:
+			<span class="tooltip">
+				<%= entityObj.issues[key]["pos"] %>
+				<span class="tooltiptext">
+					<%= entityObj.issues[key]["res"] %>
+				</span>
+			</span>
+		</p>
 	<% } %>
 	
 	<div class="grid">
@@ -52,7 +60,7 @@
 				<div class="col-1">
 					<div class="row">
 						<div class="col-1">
-							<h3><a href="/person?id=<%= donation.to %>&pageNum=1">Link</a></h3>
+							<h3><a href="/person?id=<%= donation.to %>&pageNum=1&mode=votes">Link</a></h3>
 						</div>
 						<div class="col-1">
 							<h3><%= donation.pac %></h3>
@@ -64,8 +72,8 @@
 	</div>
 	<center>
 		<% if(pageNum !== 1) { %>
-			<a href="/info?id=<%= entityObj._id %>&pageNum=<%= pageNum-1 %>">back</a>
+			<a href="/entity?id=<%= entityObj._id %>&pageNum=<%= pageNum-1 %>">back</a>
 		<% } %>
-		<a href="/info?id=<%= entityObj._id %>&pageNum=<%= pageNum+1 %>">next</a>
+		<a href="/entity?id=<%= entityObj._id %>&pageNum=<%= pageNum+1 %>">next</a>
 	</center>
 </body>

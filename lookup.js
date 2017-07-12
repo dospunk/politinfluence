@@ -50,7 +50,7 @@ var displayPerson = function(id, callback){
 				var array = [person, voteArr];
 				
 				db.close();
-				console.log(array);//dev
+				//console.log(array);//dev
 				callback(null, array);
 			},
 			function(rejected){
@@ -93,17 +93,21 @@ var displayEntity = function(id, callback){
 var displayDonations = function(id, callback){
 	mongo.connect("mongodb://127.0.0.1:27017/politinfluence", function(err, db){
 		if(err) console.log(err);
-		
+		console.log("got here");//dev
 		var people = db.collection('people');
 		var donations = db.collection('donations');
 		var objID = new ObjectID(id);
 		
-		var entity = people.findOne({_id: objID});
+		var person = people.findOne({_id: objID});
 		var donArr = donations.find({to: objID}).toArray();
-		var array = [entity, donArr];
-		
-		db.close();
-		callback(null, array);
+		Promise.all([person, donArr]).then(function(array){
+			array[1].sort(function(a, b){
+				return new Date(b.date) - new Date(a.date);
+			});
+			//console.log(val);//dev
+			db.close();
+			callback(null, array);
+		});
 	});
 }
 

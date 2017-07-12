@@ -125,15 +125,6 @@ app.get("/person", function(req, res){
 				callback(null, req.query.id);
 			},
 			lookup.displayDonations,
-			function(promises, callback){
-				Promise.all(promises).then(function(val){
-					val[1].sort(function(a, b){
-						return new Date(b.date) - new Date(a.date);
-					});
-					//console.log(val);//dev
-					callback(null, val);
-				});
-			},
 			function(data, callback){
 				var entityStr = ejs.renderFile('ejs/donations.ejs', {personObj: data[0], donArr: data[1], pageNum: parseInt(req.query.pageNum)}, function(err, str){
 					if(err) console.log(err);

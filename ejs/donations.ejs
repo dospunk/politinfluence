@@ -46,8 +46,8 @@
 	</div>
 	<center>
 		<% if(pageNum !== 1) { %>
-			<a href="/info?id=<%= personObj._id %>&pageNum=<%= pageNum-1 %>">back</a>
+			<a href="/person?id=<%= personObj._id %>&pageNum=<%= pageNum-1 %>&mode=donations">back</a>
 		<% } %>
-		<a href="/info?id=<%= personObj._id %>&pageNum=<%= pageNum+1 %>">next</a>
+		<a href="/person?id=<%= personObj._id %>&pageNum=<%= pageNum+1 %>&mode=donations">next</a>
 	</center>
 </body>
